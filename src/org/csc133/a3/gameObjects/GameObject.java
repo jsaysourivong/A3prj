@@ -1,5 +1,4 @@
 package org.csc133.a3.gameObjects;
-import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Transform;
 import com.codename1.ui.geom.Dimension;
@@ -36,7 +35,6 @@ public abstract class GameObject implements Drawable{
         translation = Transform.makeIdentity();
         rotation = Transform.makeIdentity();
         scale = Transform.makeIdentity();
-        //pretty useless rn
         lowerLeftInLocalSpace = new Point(    (int)x -size/2,
                                               (int)y - size/2);
         translation.translate((float)x,(float)y);
@@ -130,7 +128,7 @@ public abstract class GameObject implements Drawable{
         restoreOriginalTransforms(g);
     }
 
-    public void tick(){}
+    public void tick(int elapsedTimeInMiliSeconds){}
 
     private void setX(double x){
         translation.setTranslation((float)x,(float)getY());

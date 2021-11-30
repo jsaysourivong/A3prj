@@ -9,6 +9,10 @@ public abstract class Movable extends GameObject{
         super(x, y, size, color);
     }
 
+    public Movable(double x, double y, int width, int height, int color) {
+        super(x, y, width, height, color);
+    }
+
     public void setSpeed(int speed) {
         this.speed = speed;
     }
@@ -33,9 +37,6 @@ public abstract class Movable extends GameObject{
         speed += addSpeed;
     }
 
-    public void addLocation(double deltaX, double deltaY) {
-        super.updateLocation(deltaX, deltaY);
-    }
 
     public void move(){
         double angle;
@@ -45,7 +46,8 @@ public abstract class Movable extends GameObject{
         angle = 90 + heading;
         deltaX = -Math.cos(Math.toRadians(angle)) * speed;
         deltaY = -Math.sin(Math.toRadians(angle)) * speed;
-        addLocation(deltaX, deltaY);
+        translate(deltaX, deltaY);
+        //addLocation(deltaX, deltaY);
     }
 
 }

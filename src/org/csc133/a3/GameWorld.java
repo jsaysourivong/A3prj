@@ -3,36 +3,27 @@ package org.csc133.a3;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
 import com.codename1.ui.geom.Dimension;
+import com.codename1.ui.geom.Point;
 import org.csc133.a3.gameObjects.*;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * GameWorld
- * All rules in our game are implemented in this class. This class holds the
- * state of the game and determines win or lose conditions and instantiates
- * and links the other Game Objects. This class does not know anything about
- * where user input comes from or how it is generated.
- */
-
 public class GameWorld {
 
-    public static final int FUEL = 30000;
     private final int numberOfFires = 2;
 
     private int numberOfBuildings = 3;
     private int totalFireSize = 0;
     private int xPosition;
     private int yPosition;
+    private int lastTick;
 
     private Dimension mapSize;
 
-    private Object GameObject;
     private River river;
     private Helipad helipad;
     private Helicopter helicopter;
-    private Building building;
 
     private ArrayList<GameObject> gameObjects;
     private ArrayList<Fire> fires;
@@ -47,16 +38,17 @@ public class GameWorld {
 
         buildings = new ArrayList<>();
         fires = new ArrayList<>();
-        gameObjects = new ArrayList<GameObject>();
-
+        gameObjects = new ArrayList<>();
         gameObjects.add(createRiver());
         createBuilding();
         addBuildingToGO();
         createFire();
         addFireToGO();
         gameObjects.add(createHelipad());
-        gameObjects.add(createHelicopter((int)helipad.getX() + 55,
+        gameObjects.add(createHelicopter((int)helipad.getX() + 60,
                 (int)helipad.getY() + 60));
+
+        lastTick = (int) System.currentTimeMillis();
     }
 
     private void addFireToGO(){
@@ -65,11 +57,6 @@ public class GameWorld {
         }
     }
 
-    /**
-     * Since the fire objects are added to Building object collection
-     * this method takes those objects and adds each object in the collection
-     * to a GameObject collection.
-     */
     private void addBuildingToGO(){
         for(Building building : buildings){
             gameObjects.add(building);
@@ -135,7 +122,7 @@ public class GameWorld {
     }
 
     private Helicopter createHelicopter(int xPosition, int yPosition) {
-        helicopter = new Helicopter(xPosition, yPosition);
+        helicopter = new Helicopter(new Point (xPosition, yPosition), helipad);
         return helicopter;
     }
 
@@ -153,15 +140,23 @@ public class GameWorld {
 
     public void tick() {
 
+        //Consider using this style
+        /*gameObjects.forEach(object -> object.tick(elapsedTimeInMiliSeconds));*/
+
+        int elapsedTimeInMiliSeconds = ((int) System.currentTimeMillis() -
+                lastTick);
+
         for(GameObject go : gameObjects){
-            go.tick();
+            go.tick(elapsedTimeInMiliSeconds);
         }
+
         fireGrow();
         drinkWater();
         checkSizeOfFire();
         helicopter.receiveFuel(helipad);
         updateBuildingDamage();
         updateBuildingValue();
+        helicopter.updateLocalTransforms();
         checkGameConditions();
     }
 
@@ -222,11 +217,6 @@ public class GameWorld {
                 "\nWould you like to play again?", "yes", "No");
     }
 
-    /**
-     * There is two different dialogs; this is losing dialog
-     *
-     * @return true if yes, false if no
-     */
     private boolean showLosingDialog() {
         return Dialog.show("Game Over!", "You ran out of fuel\n" +
                 "Would you like to play again?", "yes", "No");
@@ -245,6 +235,10 @@ public class GameWorld {
         } else {
             return false;
         }
+    }
+
+    public void Start() {
+        helicopter.startOrStopEngine();
     }
 
     public void quit() {
@@ -267,17 +261,10 @@ public class GameWorld {
         helicopter.addSpeed(1);
     }
 
-    /**
-     * This method calls the method with the fire fighting
-     * logic
-     */
     public void fightFire() {
         helicopter.fightFire(fires);
     }
 
-    /**
-     * this method calls the method with the water drinking logic
-     */
     public void drinkWater() {
         helicopter.drink(river);
     }
@@ -337,9 +324,8 @@ public class GameWorld {
     }
 
     public String getDamage() {
-        int fireSize;
+
         int temp = 0;
-        int damage;
         for(GameObject go : gameObjects){
             if(go instanceof Building){
                 Building build = (Building)go;
@@ -350,7 +336,7 @@ public class GameWorld {
     }
 
     public String getLoss() {
-        int totalFinancialLoss = 0;
+        int totalFinancialLoss;
         int totalBuildingDamage = 0;
         int totalBuildingArea = 0;
         for(GameObject go : gameObjects){
@@ -376,4 +362,5 @@ public class GameWorld {
         }
         return String.valueOf(totalValueSaved);
     }
+
 }

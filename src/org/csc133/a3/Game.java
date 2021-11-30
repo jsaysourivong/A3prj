@@ -10,14 +10,6 @@ import org.csc133.a3.views.ControlCluster;
 import org.csc133.a3.views.GlassCockpit;
 import org.csc133.a3.views.MapView;
 
-
-/**
- * Game
- * Encapsulates the idea of the game and manages the user input and display
- * output. This class servers as the controller by handling the flow of
- * input controls and dispatches these commands to the model which is the
- * GameWorld class.
- */
 public class Game extends Form implements Runnable {
 
     protected GameWorld gw;
@@ -43,6 +35,7 @@ public class Game extends Form implements Runnable {
         addKeyListener(-92, new Break(gw));
         addKeyListener('f', new Fight(gw));
         addKeyListener('d', new Drink(gw));
+        addKeyListener('s', new Start(gw));
 
         UITimer timer = new UITimer(this);
         timer.schedule(100, true, this);
@@ -53,7 +46,6 @@ public class Game extends Form implements Runnable {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        //mapView.paint(g);
     }
 
     @Override

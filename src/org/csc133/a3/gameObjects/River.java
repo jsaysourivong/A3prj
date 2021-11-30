@@ -41,9 +41,6 @@ public class River extends Fixed {
     public void localDraw(Graphics g, Point originContainer, Point originScreen) {
 
         cn1ForwardPrimitiveTranslate(g,getDimension());
-
-        g.drawRect( 0,0,10,10);
-        g.drawRect( 100,100,20,20);
         g.drawRect( 0,
                     0,
                     dimension.getWidth(),

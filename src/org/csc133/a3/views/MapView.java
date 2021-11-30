@@ -5,6 +5,7 @@ import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.geom.Point;
 import org.csc133.a3.GameWorld;
 import org.csc133.a3.gameObjects.GameObject;
+import org.csc133.a3.gameObjects.Helicopter;
 
 import com.codename1.ui.Container;
 import com.codename1.ui.Graphics;
@@ -12,11 +13,17 @@ import com.codename1.ui.Graphics;
 
 public class MapView extends Container {
     private GameWorld gw;
+    Helicopter helicopter;
 
     public MapView(GameWorld gw){
         this.gw = gw;
+/*        init();*/
         gw.setDimension(new Dimension (this.getWidth(), this.getHeight()));
     }
+
+/*    public void init(){
+        helicopter = new Helicopter(new Point(0,0));
+    }*/
 
     @Override
     public void laidOut(){
@@ -95,16 +102,42 @@ public class MapView extends Container {
 
         setupVTM(g);
 
-
         Point originScreen = new Point(getAbsoluteX(),getAbsoluteY());
         Point originParent = new Point(getX(), getY());
 
-        g.drawRect(0,0,10,10);
-        g.drawRect(100,100,20,20);
         for(GameObject go : gw.getGameObjects()){;
             go.draw(g,originParent, originScreen);
         }
         g.resetAffine();
+        //updateLocalTransforms();
+
     }
 
+    /*
+    public void updateLocalTransforms(){
+        helicopter.updateLocalTransforms();
+    }
+
+   public void accelerate(){
+
+    }
+
+    public void break(){
+
+    }
+    public void left(){
+
+    }
+
+    public void right(){
+
+    }
+
+    public void startAndStopEngine(){
+
+    }
+
+    public void accelerate() {
+
+    }*/
 }

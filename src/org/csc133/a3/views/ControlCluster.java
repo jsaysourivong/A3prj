@@ -9,11 +9,6 @@ import com.codename1.ui.Button;
 import com.codename1.ui.layouts.BorderLayout;
 
 public class ControlCluster extends Container {
-    /**
-     * Figure out a way to place buttons in the center and right hand
-     * of this layout
-     */
-
     private GameWorld gw;
 
     private Button button;
@@ -24,9 +19,12 @@ public class ControlCluster extends Container {
     private Button decelerate;
     private Button drink;
     private Button exit;
+    private Button start;
+
 
     private Container bottomLeftContainer;
     private Container bottomRightContainer;
+    private Container bottomMiddleContainer;
 
     public ControlCluster(GameWorld gw){
 
@@ -41,9 +39,11 @@ public class ControlCluster extends Container {
         decelerate = new Button();
         drink = new Button();
         exit = new Button();
+        start =new Button();
 
         bottomLeftContainer = new Container();
         bottomRightContainer = new Container();
+        bottomMiddleContainer = new Container();
 
         //Getting commands from GameWorld
         myTurnRight = buttonMaker(new TurnRight(gw), "Right");
@@ -53,21 +53,23 @@ public class ControlCluster extends Container {
         decelerate = buttonMaker(new Break(gw), "Break");
         drink = buttonMaker(new Drink(gw), "Drink");
         exit = buttonMaker(new Exit(gw), "Exit");
+        start = buttonMaker(new Start(gw), "Start");
 
-        //Adding buttons to container
         bottomLeftContainer.add(myTurnRight);
         bottomLeftContainer.add(myTurnLeft);
         bottomLeftContainer.add(fightFire);
 
-        //Adding Buttons to right container
         bottomRightContainer.add(drink);
         bottomRightContainer.add(decelerate);
         bottomRightContainer.add(accelerate);
 
-        //Adding container to control cluster container
+        bottomMiddleContainer.add(exit);
+        bottomMiddleContainer.add(start);
+
         this.addComponent(BorderLayout.WEST,bottomLeftContainer);
         this.addComponent(BorderLayout.EAST,bottomRightContainer);
-        this.addComponent(BorderLayout.CENTER, exit);
+        this.addComponent(BorderLayout.CENTER, bottomMiddleContainer);
+
 
     }
     public Button buttonMaker(Command action, String actionName){

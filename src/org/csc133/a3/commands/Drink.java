@@ -12,7 +12,7 @@ public class Drink extends Command {
         this.gw = gw;
     }
 
-    public void actionPerformed(ActionEvent e){
+/*    public void actionPerformed(ActionEvent e){
         gw.drinkWater();
-    }
+    }*/
 }
